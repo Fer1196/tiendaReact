@@ -6,7 +6,7 @@ export function Welcome() {
   const { handleNavigation } = useNavigatePages();
   return (
     <>
-      <h1>Welcome to Shopping 15-10-2024</h1>
+      <h1>Welcome to Shopping =)</h1>
 
       <CustomizeButton
         text="Comprar"
@@ -17,7 +17,7 @@ export function Welcome() {
       ></CustomizeButton>
 
       <CustomizeButton
-        text="Solicitar Devolution Fast"
+        text="Solicitar Devolution"
         color="#acc2ef"
         onclick={() => {
           handleNavigation(`/devolution`);
