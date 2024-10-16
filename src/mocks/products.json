@@ -99,9 +99,9 @@
       "stock": 83,
       "brand": "Apple",
       "category": "laptops",
-      "thumbnail": "https://i.dummyjson.com/data/products/6/thumbnail.png",
+      "thumbnail": "https://www.apple.com/newsroom/images/product/mac/standard/Apple_MacBook-Pro_16-inch-Screen_10182021_big_carousel.jpg.large.jpg",
       "images": [
-        "https://i.dummyjson.com/data/products/6/1.png",
+        "https://www.apple.com/newsroom/images/product/mac/standard/Apple_MacBook-Pro_16-inch-Screen_10182021_big_carousel.jpg.large.jpg",
         "https://i.dummyjson.com/data/products/6/2.jpg",
         "https://i.dummyjson.com/data/products/6/3.png",
         "https://i.dummyjson.com/data/products/6/4.jpg"
