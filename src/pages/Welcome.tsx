@@ -6,7 +6,7 @@ export function Welcome() {
   const { handleNavigation } = useNavigatePages();
   return (
     <>
-      <h1>Welcome to Shopping Tonight is the Night</h1>
+      <h1>Welcome to Shopping Clase 15 de Octubre</h1>
 
       <CustomizeButton
         text="Comprar"
