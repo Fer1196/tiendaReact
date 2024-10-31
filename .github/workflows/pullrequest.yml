@@ -24,11 +24,16 @@ jobs:
             echo "color=#1E90FF" >> $GITHUB_ENV  # Azul para editado
             echo "text=Pull Request editado" >> $GITHUB_ENV
           elif [[ "${{ github.event.action }}" == "closed" ]]; then
-            echo "color=#FF4500" >> $GITHUB_ENV  # Rojo para cerrado
-            echo "text=🚀 Pull Request mergeado con éxito!" >> $GITHUB_ENV
+            if [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
+              echo "color=#00FF00" >> $GITHUB_ENV  # Verde para mergeado
+              echo "text=🚀 Pull Request mergeado con éxito!" >> $GITHUB_ENV
+            else
+              echo "color=#FF4500" >> $GITHUB_ENV  # Rojo para cerrado sin merge
+              echo "text=❌ Pull Request cerrado sin ser mergeado." >> $GITHUB_ENV
+            fi
           elif [[ "${{ github.event.action }}" == "created" ]]; then
             echo "color=#FFA500" >> $GITHUB_ENV  # Naranja para comentario
-            echo "text: Un nuevo comentario ha sido añadido a la Pull Request" >> $GITHUB_ENV
+            echo "text=Un nuevo comentario ha sido añadido a la Pull Request" >> $GITHUB_ENV
           fi
 
       - name: Send Slack notification
@@ -86,10 +91,7 @@ jobs:
               ]
             }
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN}}
-
-
-
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
 
 
 
