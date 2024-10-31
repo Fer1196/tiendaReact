@@ -16,11 +16,14 @@ jobs:
         id: set_color
         run: |
           if [[ "${{ github.event.action }}" == "opened" ]]; then
-            echo "color=#FFA500" >> $GITHUB_ENV
+            echo "color=#FFA500" >> $GITHUB_ENV  # Naranja para abiertos
+            echo "button_color=#36a64f" >> $GITHUB_ENV  # Verde para botón
           elif [[ "${{ github.event.action }}" == "edited" ]]; then
-            echo "color=#1E90FF" >> $GITHUB_ENV  # Color azul para editados
+            echo "color=#1E90FF" >> $GITHUB_ENV  # Azul para editados
+            echo "button_color=#ffcc00" >> $GITHUB_ENV  # Amarillo para botón
           elif [[ "${{ github.event.action }}" == "closed" ]]; then
-            echo "color=#FF4500" >> $GITHUB_ENV  # Color rojo para cerrados
+            echo "color=#FF4500" >> $GITHUB_ENV  # Rojo para cerrados
+            echo "button_color=#d9534f" >> $GITHUB_ENV  # Rojo oscuro para botón
           fi
 
       - name: Send Slack notification
@@ -36,11 +39,15 @@ jobs:
                   "color": "${{ env.color }}",
                   "title": "Detalles del *Issue*",
                   "text": "*Título:* ${{ github.event.issue.title }}\n*Descripción:* ${{ github.event.issue.body }}\n*URL del Issue:* ${{ github.event.issue.html_url }}\n*Número:* ${{ github.event.issue.number }}",
+                  "footer": "Notificación enviada por GitHub Actions",
+                  "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
                   "actions": [
                     {
                       "type": "button",
                       "text": "Ver Issue",
-                      "url": "${{ github.event.issue.html_url }}"
+                      "url": "${{ github.event.issue.html_url }}",
+                      "style": "primary",
+                      "color": "${{ env.button_color }}"
                     }
                   ]
                 }
