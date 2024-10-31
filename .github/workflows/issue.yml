@@ -1,8 +1,8 @@
-name: issues_notification
+name: Issues Notification
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited, closed]
 
 jobs:
   notify:
@@ -12,18 +12,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Determine attachment color
+        id: set_color
+        run: |
+          if [[ "${{ github.event.action }}" == "opened" ]]; then
+            echo "color=#FFA500" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "edited" ]]; then
+            echo "color=#1E90FF" >> $GITHUB_ENV  # Color azul para editados
+          elif [[ "${{ github.event.action }}" == "closed" ]]; then
+            echo "color=#FF4500" >> $GITHUB_ENV  # Color rojo para cerrados
+          fi
+
       - name: Send Slack notification
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: C07GJ2TGW7N
+          channel-id: A34RJ2TGEEE
           payload: |
             {
               "channel": "C07TXCTCEMD",
-              "text": "📢 Atención: Nueva incidencia reportada",
+              "text": "📢 Atención: Incidencia reportada",
               "attachments": [
                 {
-                  "color": "#FFA500",
-                  "text": "Detalles del *Issue*:\n*Título:* ${{ github.event.issue.title }}\n *Body:* ${{ github.event.issue.body }}\n*Issue URL:* ${{ github.event.issue.html_url }}\n*Number:* ${{ github.event.issue.number }}",
+                  "color": "${{ env.color }}",
+                  "title": "Detalles del *Issue*",
+                  "text": "*Título:* ${{ github.event.issue.title }}\n*Descripción:* ${{ github.event.issue.body }}\n*URL del Issue:* ${{ github.event.issue.html_url }}\n*Número:* ${{ github.event.issue.number }}",
                   "actions": [
                     {
                       "type": "button",
