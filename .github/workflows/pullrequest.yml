@@ -2,7 +2,7 @@ name: Pull Request Notification
 
 on:
   pull_request:
-    types: [opened, edited, closed]
+    types: [opened, edited, closed, reopened]
   pull_request_review_comment:
     types: [created]
 
@@ -31,6 +31,9 @@ jobs:
               echo "color=#FF4500" >> $GITHUB_ENV  # Rojo para cerrado sin merge
               echo "text=❌ Pull Request cerrado sin ser mergeado." >> $GITHUB_ENV
             fi
+          elif [[ "${{ github.event.action }}" == "reopened" ]]; then
+            echo "color=#FFA500" >> $GITHUB_ENV  # Naranja para reabierto
+            echo "text=🔄 Pull Request reabierto" >> $GITHUB_ENV
           elif [[ "${{ github.event.action }}" == "created" ]]; then
             echo "color=#FFA500" >> $GITHUB_ENV  # Naranja para comentario
             echo "text=Un nuevo comentario ha sido añadido a la Pull Request" >> $GITHUB_ENV
