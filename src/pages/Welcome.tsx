@@ -9,7 +9,7 @@ export function Welcome() {
       <h1>Welcome to Shopping Clase 15 de Octubre</h1>
 
       <CustomizeButton
-        text="Comprar"
+        text="Compra Ya es el moemnto"
         color="#01eac2"
         onclick={() => {
           handleNavigation(`/shopping`);
@@ -17,7 +17,7 @@ export function Welcome() {
       ></CustomizeButton>
 
       <CustomizeButton
-        text="Solicitar Devolution"
+        text="Solicitar Devolution "
         color="#acc2ef"
         onclick={() => {
           handleNavigation(`/devolution`);
