@@ -3,6 +3,8 @@ name: Pull Request Notification
 on:
   pull_request:
     types: [opened, edited, closed]
+  pull_request_review_comment:
+    types: [created]
 
 jobs:
   notify:
@@ -24,12 +26,15 @@ jobs:
           elif [[ "${{ github.event.action }}" == "closed" ]]; then
             echo "color=#FF4500" >> $GITHUB_ENV  # Rojo para cerrado
             echo "text=🚀 Pull Request mergeado con éxito!" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "created" ]]; then
+            echo "color=#FFA500" >> $GITHUB_ENV  # Naranja para comentario
+            echo "text: Un nuevo comentario ha sido añadido a la Pull Request" >> $GITHUB_ENV
           fi
 
       - name: Send Slack notification
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          channel-id: C07GJ2TGW7N
+          channel-id: C07TXCTCEMD
           payload: |
             {
               "channel": "C07TXCTCEMD",
@@ -81,4 +86,11 @@ jobs:
               ]
             }
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+
+
+
+
+
+
