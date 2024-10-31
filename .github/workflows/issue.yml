@@ -1,18 +1,38 @@
-name: slack-notification
+name: issues_notification
 
-on: [ issues]
+on:
+  issues:
+    types: [opened, edited]
 
 jobs:
-  slack-notifications:
-    runs-on: ubuntu-20.04
-    name: Sends a message to Slack when a push, a pull request or an issue is made
+  notify:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Send message to Slack API
-        uses: archive/github-actions-slack@v2.0.0
-        id: notify
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.24.0
         with:
-          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
-          slack-channel: C07TXCTCEMD
-          slack-text: Hello! Event "${{ github.event_name }}" in "${{ github.repository }}" and "${{ github.event.pull_request.html_url }}" and "${{ github.repository }}" 🤓
-      - name: Result from "Send Message"
-        run: echo "The result was ${{ steps.notify.outputs.slack-result }}"
+          channel-id: C07GJ2TGW7N
+          payload: |
+            {
+              "channel": "C07TXCTCEMD",
+              "text": "📢 Atención: Nueva incidencia reportada",
+              "attachments": [
+                {
+                  "color": "#FFA500",
+                  "text": "Detalles del *Issue*:\n*Título:* ${{ github.event.issue.title }}\n*Autor:* ${{ github.event.issue.user.login }}\n*Body:* ${{ github.event.issue.body }}\n*Issue URL:* ${{ github.event.issue.html_url }}\n*Number:* ${{ github.event.issue.number }}",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "text": "Ver Issue",
+                      "url": "${{ github.event.issue.html_url }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
