@@ -7,7 +7,7 @@ export function NotFound() {
       <h1>Te equivocaste de URL</h1>
       <h2>Creo que te hace falta un cafe</h2>
 
-      <h3>Para comprar esta taza o más productos da click en la img </h3>
+      <h3>Para comprar esta taza o más productos da click en la img, es tu moemento </h3>
 
       <img
         onClick={() => handleNavigation("/")}
