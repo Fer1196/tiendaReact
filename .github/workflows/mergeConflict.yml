@@ -1,0 +1,67 @@
+name: Notify Merge Conflicts
+
+on:
+  pull_request:
+    types: [synchronize]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check for merge conflicts
+        id: check_conflicts
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          if ! git merge-base --is-ancestor ${{ github.sha }} origin/${{ github.event.pull_request.base.ref }}; then
+            echo "conflicts=true" >> $GITHUB_ENV
+          else
+            echo "conflicts=false" >> $GITHUB_ENV
+          fi
+
+      - name: Send Slack notification
+        if: env.conflicts == 'true'
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: C07TXCTCEMD
+          payload: |
+            {
+              "channel": "C07TXCTCEMD",
+              "text": "❌ Merge Conflict en Pull Request",
+              "attachments": [
+                {
+                  "color": "#FF4500",
+                  "pretext": "El Pull Request no se puede fusionar debido a conflictos:",
+                  "fields": [
+                    {
+                      "title": "Título",
+                      "value": "${{ github.event.pull_request.title }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Número",
+                      "value": "${{ github.event.pull_request.number }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Autor",
+                      "value": "${{ github.event.pull_request.user.login }}",
+                      "short": true
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": "button",
+                      "text": "Ver Pull Request",
+                      "url": "${{ github.event.pull_request.html_url }}",
+                      "style": "danger"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
