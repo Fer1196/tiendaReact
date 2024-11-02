@@ -1,0 +1,60 @@
+name: Issues Notification
+
+on:
+  issues:
+    types: [opened, edited, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Determine attachment color and title
+        id: set_color
+        run: |
+          if [[ "${{ github.event.action }}" == "opened" ]]; then
+            echo "color=#FFA500" >> $GITHUB_ENV  # Naranja para abiertos
+            echo "button_color=#36a64f" >> $GITHUB_ENV  # Verde para botón
+            echo "title=Detalles del ISSUE ABIERTO" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "edited" ]]; then
+            echo "color=#1E90FF" >> $GITHUB_ENV  # Azul para editados
+            echo "button_color=#ffcc00" >> $GITHUB_ENV  # Amarillo para botón
+            echo "title=Detalles del ISSUE EDITADO" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "closed" ]]; then
+            echo "color=#FF4500" >> $GITHUB_ENV  # Rojo para cerrados
+            echo "button_color=#d9534f" >> $GITHUB_ENV  # Rojo oscuro para botón
+            echo "title=Detalles del ISSUE CERRADO" >> $GITHUB_ENV
+          fi
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: A34RJ2TGEEE
+          payload: |
+            {
+              "channel": "C07TXCTCEMD",
+              "text": "📢 Atención: Incidencia reportada",
+              "attachments": [
+                {
+                  "color": "${{ env.color }}",
+                  "title": "${{ env.title }}",
+                  "text": "*Título:* ${{ github.event.issue.title }}\n*Descripción:* ${{ github.event.issue.body }}\n*URL del Issue:* ${{ github.event.issue.html_url }}\n*Número:* ${{ github.event.issue.number }}",
+                  "footer": "Notificación enviada por GitHub Actions",
+                  "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "text": "Ver Issue",
+                      "url": "${{ github.event.issue.html_url }}",
+                      "style": "primary",
+                      "color": "${{ env.button_color }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}

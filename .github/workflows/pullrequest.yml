@@ -1,0 +1,101 @@
+name: Pull Request Notification
+
+on:
+  pull_request:
+    types: [opened, edited, closed, reopened]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Determine message color and text
+        id: set_color_text
+        run: |
+          if [[ "${{ github.event.action }}" == "opened" ]]; then
+            echo "color=#36a64f" >> $GITHUB_ENV  # Verde para abierto
+            echo "text=Nueva Pull Request creada" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "edited" ]]; then
+            echo "color=#1E90FF" >> $GITHUB_ENV  # Azul para editado
+            echo "text=Pull Request editado" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "closed" ]]; then
+            if [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
+              echo "color=#00FF00" >> $GITHUB_ENV  # Verde para mergeado
+              echo "text=🚀 Pull Request mergeado con éxito!" >> $GITHUB_ENV
+            else
+              echo "color=#FF4500" >> $GITHUB_ENV  # Rojo para cerrado sin merge
+              echo "text=❌ Pull Request cerrado sin ser mergeado." >> $GITHUB_ENV
+            fi
+          elif [[ "${{ github.event.action }}" == "reopened" ]]; then
+            echo "color=#FFA500" >> $GITHUB_ENV  # Naranja para reabierto
+            echo "text=🔄 Pull Request reabierto" >> $GITHUB_ENV
+          elif [[ "${{ github.event.action }}" == "created" ]]; then
+            echo "color=#FFA500" >> $GITHUB_ENV  # Naranja para comentario
+            echo "text=Un nuevo comentario ha sido añadido a la Pull Request" >> $GITHUB_ENV
+          fi
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: C07TXCTCEMD
+          payload: |
+            {
+              "channel": "C07TXCTCEMD",
+              "text": "${{ env.text }}",
+              "attachments": [
+                {
+                  "color": "${{ env.color }}",
+                  "pretext": "Detalles del Pull Request:",
+                  "fields": [
+                    {
+                      "title": "Título",
+                      "value": "${{ github.event.pull_request.title }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Autor",
+                      "value": "${{ github.event.pull_request.user.login }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Estado",
+                      "value": "${{ github.event.pull_request.state }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Número",
+                      "value": "${{ github.event.pull_request.number }}",
+                      "short": true
+                    }
+                  ],
+                  "actions": [
+                    {
+                      "type": "button",
+                      "text": "Ver Pull Request",
+                      "url": "${{ github.event.pull_request.html_url }}",
+                      "style": "primary"
+                    },
+                    {
+                      "type": "button",
+                      "text": "Revisar Cambios",
+                      "url": "${{ github.event.pull_request.html_url }}/files",
+                      "style": "danger"
+                    }
+                  ],
+                  "footer": "GitHub Actions",
+                  "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                  "ts": "${{ github.event.pull_request.updated_at }}"
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
+
+
+
+
