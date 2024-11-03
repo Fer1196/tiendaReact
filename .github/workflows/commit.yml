@@ -30,7 +30,7 @@ jobs:
               "text": "¡Nuevo commit en la rama *main*! 🎉",
               "attachments": [
                 {
-                  "color": "#36a64f",  // Verde para commits
+                  "color": "#36a64f",
                   "pretext": "Detalles del commit:",
                   "fields": [
                     {
@@ -46,14 +46,3 @@ jobs:
                     {
                       "title": "Commit URL",
                       "value": "<https://github.com/${{ github.repository }}/commit/${{ env.url }}|Ver commit>",
-                      "short": true
-                    }
-                  ],
-                  "footer": "GitHub Actions",
-                  "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-                  "ts": "${{ github.event.head_commit.timestamp }}"
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
