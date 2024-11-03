@@ -33,7 +33,7 @@ export function FiltersProvider({
   const [productList, setProductList] = useState([]);
 
   useEffect(() => {
-    fetch(`https://tfm-back-react-mongo-git-main-fer1196s-projects.vercel.app/products`, {
+    fetch(`https://tfm-back-react-mongo-git-main-fer1196s-projects.vercel.app/productos`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
