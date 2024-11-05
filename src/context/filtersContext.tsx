@@ -34,7 +34,7 @@ export function FiltersProvider({
 
   useEffect(() => {
     fetch(
-      `https://tfm-back-react-mongo-git-main-fer1196s-projects.vercel.app/products`,
+      `https://tfm-back-react-mongo-git-main-fer1196s-projects.vercel.app/productos`,
       {
         method: "GET",
         headers: {
