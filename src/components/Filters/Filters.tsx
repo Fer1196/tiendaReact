@@ -41,12 +41,13 @@ export function Filters() {
           value={filters.category}
         >
           <option value="all">all</option>
-          <option value="laptops">Laptops</option>
-          <option value="smartphones">Mobiles</option>
+          <option value="headphones">Headphones</option>
           <option value="keyboards">Keyboards</option>
 
-          <option value="headphones">Headphones</option>
+          <option value="laptops">Laptops</option>
+          <option value="smartphones">Mobiles</option>
 
+          <option value="tablets">tablets</option>
         </select>
       </div>
     </section>
