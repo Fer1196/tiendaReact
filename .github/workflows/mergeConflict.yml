@@ -22,52 +22,8 @@ jobs:
             echo "conflicts=false" >> $GITHUB_ENV
           fi
 
-      - name: Send Slack notification (Conflict)
+      - name: Send Slack notification
         if: env.conflicts == 'true'
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          channel-id: C07TXCTCEMD
-          payload: |
-            {
-              "channel": "C07TXCTCEMD",
-              "text": "❌ Hay Conflictos en el Pull Request",
-              "attachments": [
-                {
-                  "color": "#FF4500",
-                  "pretext": "El Pull Request no se puede fusionar debido a conflictos:",
-                  "fields": [
-                    {
-                      "title": "Título",
-                      "value": "${{ github.event.pull_request.title }}",
-                      "short": true
-                    },
-                    {
-                      "title": "Número",
-                      "value": "${{ github.event.pull_request.number }}",
-                      "short": true
-                    },
-                    {
-                      "title": "Autor",
-                      "value": "${{ github.event.pull_request.user.login }}",
-                      "short": true
-                    }
-                  ],
-                  "actions": [
-                    {
-                      "type": "button",
-                      "text": "Ver Pull Request",
-                      "url": "${{ github.event.pull_request.html_url }}",
-                      "style": "danger"
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
-
-      - name: Send Slack notification (Update without conflict)
-        if: env.conflicts == 'false'
         uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: C07TXCTCEMD
