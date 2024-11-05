@@ -45,6 +45,8 @@ export function Filters() {
           <option value="smartphones">Mobiles</option>
           <option value="keyboards">Keyboards</option>
           {/* <option value="headphones">Headphones</option> */}
+          {/* <option value="consoles">Console</option> */}
+          <option value="tablets">Tablets</option>
         </select>
       </div>
     </section>
