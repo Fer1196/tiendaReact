@@ -45,6 +45,7 @@ export function Filters() {
           <option value="laptops">Laptops</option>
           <option value="smartphones">Mobiles</option>
           <option value="keyboards">Keyboards</option>
+          <option value="mouse">Mouse</option>
         </select>
       </div>
     </section>
